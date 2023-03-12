@@ -1,8 +1,5 @@
 <script>
 
-const NOTIFICACION_OK = 1;
-const NOTIFICACION_DANGER = 2;
-const NOTIFICACION_WARNING = 3;
 
   function crearTablaContactos() {
     let tabla = document.getElementById("tablaContactos");
@@ -51,55 +48,64 @@ const NOTIFICACION_WARNING = 3;
 
 
     //mostrat notificación de OK
-    crearNotificacion(NOTIFICACION_OK, 'contactos obtenidos correctamente', 'todo en orden')
+    crearNotificacionOK('contactos obtenidos correctamente', 'todo en orden')
   }
 
   function crearTablaContactosError() {
     //MOstrar notificación de error
-    crearNotificacion(NOTIFICACION_DANGER, 'No se han podido  leer los contactos', 'ERROR')
+    crearNotificacionError('No se han podido  leer los contactos', 'ERROR')
   }
 
-function crearNotificacion(tipo, mensaje, titulo) {
-  //obtener los datos de la notificacion
-let mensajeNotificacion = document.getElementById('mensajeNotificacion')
-let tituloNotificacion = document.getElementById('tituloNotificacion')
-let elementoNotificacion = document.getElementById('notificacion')
-let iconoNotificacion = document.getElementById('iconoNotificacion')
-let notificacion = bootstrap.Toast.getOrCreateInstance(elementoNotificacion)
+function crearNotificacion(mensaje, titulo) {
+  document.getElementById('mensajeNotificacion').textContent = mensaje
+  document.getElementById('tituloNotificacion').textContent = titulo
+  let elementoNotificacion = document.getElementById('notificacion')
+  bootstrap.Toast.getOrCreateInstance(elementoNotificacion).show()
+}
+
+function crearNotificacionOK(mensaje, titulo) {
+
+  crearNotificacion(mensaje, titulo)
+  crearIconoNotificacionOK()
+  crearColorNotificacion('--color-verde-oscuro')
+}
+
+function crearNotificacionError(mensaje, titulo) {
+  crearNotificacion(mensaje, titulo)
+  crearIconoNotificacionError()
+  crearColorNotificacion('--color-rojo-oscuro')
+}
+
+function crearNotificacionAdvertencia(mensaje, titulo) {
+  crearNotificacion(mensaje, titulo)
+  crearIconoNotificacionAdvertencia()
+  crearColorNotificacion('--color-amarillo-oscuro')
+}
  
-//editar notificación
-mensajeNotificacion.textContent=mensaje
-tituloNotificacion.textContent=titulo
 
-switch(tipo){
-  case NOTIFICACION_OK: 
-  iconoNotificacion.className=''
-iconoNotificacion.classList.add('bi', 'bi-check2-square')
-elementoNotificacion.style.backgroundColor=getComputedStyle(document.documentElement).getPropertyValue('--color-verde-oscuro')
-break
+function crearIconoNotificacionOK() {
+  document.getElementById('iconoNotificacion').className=''
+  document.getElementById('iconoNotificacion').classList.add('bi', 'bi-check2-square')
+}
 
-case NOTIFICACION_DANGER: 
-  iconoNotificacion.className=''
-iconoNotificacion.classList.add('bi', 'bi-bug')
-elementoNotificacion.style.backgroundColor=getComputedStyle(document.documentElement).getPropertyValue('--color-rojo-oscuro')
-break
+function crearIconoNotificacionError() {
+  document.getElementById('iconoNotificacion').className=''
+  document.getElementById('iconoNotificacion').classList.add('bi', 'bi-bug')
+}
 
-case NOTIFICACION_WARNING: 
-  iconoNotificacion.className=''
-iconoNotificacion.classList.add('bi', 'bi-exclamation-square')
-elementoNotificacion.style.backgroundColor=getComputedStyle(document.documentElement).getPropertyValue('--color-amarillo-oscuro')
-break
+function crearIconoNotificacionAdvertencia() {
+  document.getElementById('iconoNotificacion').className=''
+  document.getElementById('iconoNotificacion').classList.add('bi', 'bi-exclamation-square')
+}
 
-
+function crearColorNotificacion(color) {
+  let elementoNotificacion = document.getElementById('notificacion')
+  elementoNotificacion.style.backgroundColor=getComputedStyle(document.documentElement).getPropertyValue(color)
 }
 
 
-//mostrar notificación
 
-notificacion.show()
-
-}
-
+//----------------------------------------------------------------------------------
 
   //   function crearTablaContactos() {
   //   let tabla = document.getElementById("tablaContactos");
