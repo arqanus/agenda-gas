@@ -1,4 +1,9 @@
 <script>
+
+const NOTIFICACION_OK = 1;
+const NOTIFICACION_DANGER = 2;
+const NOTIFICACION_WARNING = 3;
+
   function crearTablaContactos() {
     let tabla = document.getElementById("tablaContactos");
     if (tabla) tabla.remove();
@@ -40,17 +45,18 @@
     tablaHeader.classList.add('table-dark')
     //agregamos el cuerpo de la tabla
     tabla.appendChild(tablaBody)
-    tabla.classList.add('table', 'table-striped', 'border', 'border-3')
+    tabla.classList.add('table', 'table-striped', 'border', 'border-1', 'border-dark')
     //agregamos tabla a la página
     document.getElementById('divContactos').appendChild(tabla)
 
 
     //mostrat notificación de OK
-    crearNotificacion(1, 'contactos obtenidos correctamente', 'todo en orden')
+    crearNotificacion(NOTIFICACION_OK, 'contactos obtenidos correctamente', 'todo en orden')
   }
 
   function crearTablaContactosError() {
     //MOstrar notificación de error
+    crearNotificacion(NOTIFICACION_DANGER, 'No se han podido  leer los contactos', 'ERROR')
   }
 
 function crearNotificacion(tipo, mensaje, titulo) {
@@ -62,12 +68,32 @@ let iconoNotificacion = document.getElementById('iconoNotificacion')
 let notificacion = bootstrap.Toast.getOrCreateInstance(elementoNotificacion)
  
 //editar notificación
-
-iconoNotificacion.className=''
-iconoNotificacion.classList.add('bi', 'bi-check2-square')
 mensajeNotificacion.textContent=mensaje
 tituloNotificacion.textContent=titulo
+
+switch(tipo){
+  case NOTIFICACION_OK: 
+  iconoNotificacion.className=''
+iconoNotificacion.classList.add('bi', 'bi-check2-square')
 elementoNotificacion.style.backgroundColor=getComputedStyle(document.documentElement).getPropertyValue('--color-verde-oscuro')
+break
+
+case NOTIFICACION_DANGER: 
+  iconoNotificacion.className=''
+iconoNotificacion.classList.add('bi', 'bi-bug')
+elementoNotificacion.style.backgroundColor=getComputedStyle(document.documentElement).getPropertyValue('--color-rojo-oscuro')
+break
+
+case NOTIFICACION_WARNING: 
+  iconoNotificacion.className=''
+iconoNotificacion.classList.add('bi', 'bi-exclamation-square')
+elementoNotificacion.style.backgroundColor=getComputedStyle(document.documentElement).getPropertyValue('--color-amarillo-oscuro')
+break
+
+
+}
+
+
 //mostrar notificación
 
 notificacion.show()
