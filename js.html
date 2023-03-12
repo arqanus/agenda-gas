@@ -1,13 +1,46 @@
 <script>
+  function insertarContacto() {
+    //obtenerdatos
+    let nombre = document.getElementById("nombre").value;
+    let correo = document.getElementById("correo").value;
 
+    //eliminar tabla
+    eliminarTabla();
+    //crear loader
+    crearLoader("divContactos");
+
+    google.script.run
+      .withSuccessHandler(contactoInsertadoCorrectamente)
+      .withFailureHandler(contactoInsertadoError)
+      .insertarContacto(nombre, correo);
+  }
+  function contactoInsertadoCorrectamente() {
+    //eliminamos los datos de los inputs
+    document.getElementById("nombre").value = "";
+    document.getElementById("correo").value = "";
+    // mostrar notificacion
+    crearNotificacionOK("contacto insertado correctamente", "CONTACTO OK");
+
+    //eliminar loader
+    eliminarLoader();
+    //mostramos la tabla
+    crearTablaContactos();
+  }
+
+  function contactoInsertadoError() {
+    crearNotificacionError("No se ha podido insertar el contacto", "ERROR");
+    //eliminar loader
+    eliminarLoader();
+    //mostramos la tabla
+    crearTablaContactos();
+  }
 
   function crearTablaContactos() {
-    
     //eliminamos la tabla si existe
-    eliminarTabla()
+    eliminarTabla();
 
     //crear loader
-    crearLoader('divContactos')
+    crearLoader("divContactos");
 
     google.script.run
       .withSuccessHandler(crearTablaContactosCorrectamente)
@@ -43,154 +76,109 @@
       tablaBody.appendChild(fila);
     }
     //agragamos clases a la cabecera
-    tablaHeader.classList.add('table-dark')
+    tablaHeader.classList.add("table-dark");
     //agregamos el cuerpo de la tabla
-    tabla.appendChild(tablaBody)
-    tabla.classList.add('table', 'table-striped', 'border', 'border-1', 'border-dark')
+    tabla.appendChild(tablaBody);
+    tabla.classList.add(
+      "table",
+      "table-striped",
+      "border",
+      "border-1",
+      "border-dark"
+    );
     //agregamos tabla a la página
-    document.getElementById('divContactos').appendChild(tabla)
-
+    document.getElementById("divContactos").appendChild(tabla);
 
     //mostrat notificación de OK
-    crearNotificacionOK('contactos obtenidos correctamente', 'todo en orden')
-  
-    //eliminaremos el loader
-    eliminarLoader()
-  }
+    crearNotificacionOK("contactos obtenidos correctamente", "todo en orden");
 
+    //eliminaremos el loader
+    eliminarLoader();
+  }
 
   function crearTablaContactosError() {
     //MOstrar notificación de error
-    crearNotificacionError('No se han podido  leer los contactos', 'ERROR')
+    crearNotificacionError("No se han podido  leer los contactos", "ERROR");
   }
 
-function crearNotificacion(mensaje, titulo) {
-  document.getElementById('mensajeNotificacion').textContent = mensaje
-  document.getElementById('tituloNotificacion').textContent = titulo
-  let elementoNotificacion = document.getElementById('notificacion')
-  bootstrap.Toast.getOrCreateInstance(elementoNotificacion).show()
-}
+  function crearNotificacion(mensaje, titulo) {
+    document.getElementById("mensajeNotificacion").textContent = mensaje;
+    document.getElementById("tituloNotificacion").textContent = titulo;
+    let elementoNotificacion = document.getElementById("notificacion");
+    bootstrap.Toast.getOrCreateInstance(elementoNotificacion).show();
+  }
 
-function crearNotificacionOK(mensaje, titulo) {
+  function crearNotificacionOK(mensaje, titulo) {
+    crearNotificacion(mensaje, titulo);
+    crearIconoNotificacionOK();
+    crearColorNotificacion("--color-verde-oscuro");
+  }
 
-  crearNotificacion(mensaje, titulo)
-  crearIconoNotificacionOK()
-  crearColorNotificacion('--color-verde-oscuro')
-}
+  function crearNotificacionError(mensaje, titulo) {
+    crearNotificacion(mensaje, titulo);
+    crearIconoNotificacionError();
+    crearColorNotificacion("--color-rojo-oscuro");
+  }
 
-function crearNotificacionError(mensaje, titulo) {
-  crearNotificacion(mensaje, titulo)
-  crearIconoNotificacionError()
-  crearColorNotificacion('--color-rojo-oscuro')
-}
+  function crearNotificacionAdvertencia(mensaje, titulo) {
+    crearNotificacion(mensaje, titulo);
+    crearIconoNotificacionAdvertencia();
+    crearColorNotificacion("--color-amarillo-oscuro");
+  }
 
-function crearNotificacionAdvertencia(mensaje, titulo) {
-  crearNotificacion(mensaje, titulo)
-  crearIconoNotificacionAdvertencia()
-  crearColorNotificacion('--color-amarillo-oscuro')
-}
- 
+  function crearIconoNotificacionOK() {
+    document.getElementById("iconoNotificacion").className = "";
+    document
+      .getElementById("iconoNotificacion")
+      .classList.add("bi", "bi-check2-square");
+  }
 
-function crearIconoNotificacionOK() {
-  document.getElementById('iconoNotificacion').className=''
-  document.getElementById('iconoNotificacion').classList.add('bi', 'bi-check2-square')
-}
+  function crearIconoNotificacionError() {
+    document.getElementById("iconoNotificacion").className = "";
+    document.getElementById("iconoNotificacion").classList.add("bi", "bi-bug");
+  }
 
-function crearIconoNotificacionError() {
-  document.getElementById('iconoNotificacion').className=''
-  document.getElementById('iconoNotificacion').classList.add('bi', 'bi-bug')
-}
+  function crearIconoNotificacionAdvertencia() {
+    document.getElementById("iconoNotificacion").className = "";
+    document
+      .getElementById("iconoNotificacion")
+      .classList.add("bi", "bi-exclamation-square");
+  }
 
-function crearIconoNotificacionAdvertencia() {
-  document.getElementById('iconoNotificacion').className=''
-  document.getElementById('iconoNotificacion').classList.add('bi', 'bi-exclamation-square')
-}
+  function crearColorNotificacion(color) {
+    let elementoNotificacion = document.getElementById("notificacion");
+    elementoNotificacion.style.backgroundColor = getComputedStyle(
+      document.documentElement
+    ).getPropertyValue(color);
+  }
 
-function crearColorNotificacion(color) {
-  let elementoNotificacion = document.getElementById('notificacion')
-  elementoNotificacion.style.backgroundColor=getComputedStyle(document.documentElement).getPropertyValue(color)
-}
+  function crearLoader(elementoPadre) {
+    eliminarLoader();
+    let loader = document.createElement("div");
+    loader.id = "loader";
 
+    loader.appendChild(document.createElement("div"));
+    loader.appendChild(document.createElement("div"));
+    loader.appendChild(document.createElement("div"));
+    loader.appendChild(document.createElement("div"));
+    loader.appendChild(document.createElement("div"));
+    loader.appendChild(document.createElement("div"));
+    loader.appendChild(document.createElement("div"));
+    loader.appendChild(document.createElement("div"));
+    loader.appendChild(document.createElement("div"));
+    loader.classList.add("lds-grid");
+    document.getElementById(elementoPadre).appendChild(loader);
+  }
 
-function crearLoader(elementoPadre){
-  eliminarLoader()
-  let loader = document.createElement('div')
-  loader.id = 'loader'
-  
-  loader.appendChild(document.createElement('div'))
-  loader.appendChild(document.createElement('div'))
-  loader.appendChild(document.createElement('div'))
-  loader.appendChild(document.createElement('div'))
-  loader.appendChild(document.createElement('div'))
-  loader.appendChild(document.createElement('div'))
-  loader.appendChild(document.createElement('div'))
-  loader.appendChild(document.createElement('div'))
-  loader.appendChild(document.createElement('div'))
-  loader.classList.add('lds-grid')
-  document.getElementById(elementoPadre).appendChild(loader)
-}
+  function eliminarLoader() {
+    let loader = document.getElementById("loader");
+    if (loader) loader.remove();
+  }
 
-function eliminarLoader(){
-  let loader = document.getElementById('loader')
-  if(loader) loader.remove()
-}
-
-function eliminarTabla(){
-  let tabla = document.getElementById("tablaContactos");
+  function eliminarTabla() {
+    let tabla = document.getElementById("tablaContactos");
     if (tabla) tabla.remove();
-}
+  }
 
-
-
-//----------------------------------------------------------------------------------
-
-  //   function crearTablaContactos() {
-  //   let tabla = document.getElementById("tablaContactos");
-  //   if (tabla) tabla.remove();
-
-  //   google.script.run
-  //     .withSuccessHandler(function (datos) {
-  //       const tabla = construirTabla(datos);
-  //       document.getElementById("divContactos").appendChild(tabla);
-  //     })
-  //     .withFailureHandler(function (error) {
-  //       console.log("Error al obtener los contactos:", error);
-  //     })
-  //     .obtenerContactos();
-  // }
-
-  // function construirTabla(datos) {
-  //   const tabla = document.createElement("table");
-  //   tabla.id = "tablaContactos";
-
-  //   // Crea el encabezado de la tabla
-  //   const encabezado = document.createElement("thead");
-  //   const primeraFila = document.createElement("tr");
-  //   datos[0].forEach(function (valor) {
-  //     const celda = document.createElement("th");
-  //     celda.textContent = valor;
-  //     primeraFila.appendChild(celda);
-  //   });
-  //   encabezado.appendChild(primeraFila);
-  //   tabla.appendChild(encabezado);
-
-  //   // Crea el cuerpo de la tabla
-  //   const cuerpo = document.createElement("tbody");
-  //   datos.slice(1).forEach(function (fila) {
-  //     const nuevaFila = document.createElement("tr");
-  //     fila.forEach(function (valor) {
-  //       const celda = document.createElement("td");
-  //       celda.textContent = valor;
-  //       nuevaFila.appendChild(celda);
-  //     });
-  //     cuerpo.appendChild(nuevaFila);
-  //   });
-  //   tabla.appendChild(cuerpo);
-
-  //   // Agrega clases a la tabla y al encabezado
-  //   tabla.classList.add("table", "table-striped", "border", "border-3", "table-dark");
-  //   encabezado.classList.add("table-success");
-
-  //   return tabla;
-  // }
+  
 </script>
