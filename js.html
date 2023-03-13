@@ -7,7 +7,9 @@
     let telf = document.getElementById("telf").value;
 
     //CERRAR MODAL------ ojo cambiar o no dependiendo de lo que vamos ahacer-----------------------------------------
-    bootstrap.Modal.getInstance(document.getElementById('crearContactoModal')).hide()
+    bootstrap.Modal.getInstance(
+      document.getElementById("crearContactoModal")
+    ).hide();
 
     //eliminar tabla
     eliminarTabla();
@@ -67,6 +69,15 @@
       celda.textContent = obj[0][i];
       primeraFila.appendChild(celda);
     }
+
+    //AGREGAR COLUMNA OPCIONES--------------------------------------------------
+
+    let celdaOpciones = document.createElement("td");
+    celdaOpciones.textContent = "OPCIONES";
+    celdaOpciones.classList.add('text-center')
+    primeraFila.appendChild(celdaOpciones);
+
+    //AGREGAR FILA AL HEADER DE LA TABLA
     tablaHeader.appendChild(primeraFila);
     tabla.appendChild(tablaHeader);
 
@@ -78,6 +89,8 @@
         celda.textContent = obj[i][j];
         fila.appendChild(celda);
       }
+      //agregar los botones a la fila
+      fila.appendChild(crearCeldaBotones(i + 1));
       tablaBody.appendChild(fila);
     }
     //agragamos clases a la cabecera
@@ -86,6 +99,7 @@
     tabla.appendChild(tablaBody);
     tabla.classList.add(
       "table",
+      "table-success",
       "table-striped",
       "border",
       "border-1",
@@ -100,6 +114,63 @@
     //eliminaremos el loader
     eliminarLoader();
   }
+  function crearCeldaBotones(numFila) {
+    //crear celda
+    let celda = document.createElement("td");
+    celda.classList.add("text-center");
+    //crear boton borrar--------------------------------------------------------------
+    let botonBorrar = document.createElement("button");
+    botonBorrar.onclick = () => borrarContacto(numFila);
+    botonBorrar.classList.add("btn", "btn-danger", "m-1");
+    //icono borrar
+    let iconoBorrar = document.createElement('i')
+    iconoBorrar.classList.add('bi', 'bi-trash')
+    botonBorrar.appendChild(iconoBorrar)
+
+    //crear boton modificar------------------------------------------------------------
+    let botonModificar = document.createElement("button");
+    // botonModificar.onclick = () => borrarContacto(numFila)
+    botonModificar.classList.add("btn", "btn-warning", "m-1");
+     //icono modificar
+     let iconoModificar = document.createElement('i')
+     iconoModificar.classList.add('bi', 'bi-pencil-square')
+    botonModificar.appendChild(iconoModificar)
+
+    // AGREGAR BOTONES A LA CELDA
+    celda.appendChild(botonBorrar)
+    celda.appendChild(botonModificar)
+
+    return celda
+
+
+  }
+
+  function borrarContacto(numFila) {
+    //eliminar tabla
+    eliminarTabla();
+    //crear loader
+    crearLoader("divContactos");
+
+    google.script.run
+      .withSuccessHandler(contactoBorradoCorrectamente)
+      .withFailureHandler(contactoBorradoError)
+      .borrarContacto(numFila);
+  }
+
+  function contactoBorradoCorrectamente (){
+
+     // mostrar notificacion
+     crearNotificacionOK("contacto BORRADO correctamente", "BORRADO OK");
+      eliminarLoader();
+      crearTablaContactos();
+  }
+
+  function contactoBorradoError(){
+    crearNotificacionError("No se ha podido BORRAR el contacto", "ERROR");
+    eliminarLoader();
+    crearTablaContactos();
+  }
+
 
   function crearTablaContactosError() {
     //MOstrar notificación de error
@@ -184,6 +255,4 @@
     let tabla = document.getElementById("tablaContactos");
     if (tabla) tabla.remove();
   }
-
-  
 </script>
