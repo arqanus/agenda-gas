@@ -14,9 +14,9 @@
       type="button"
       class="btn btn-primary m-2"
       data-bs-toggle="modal"
-      data-bs-target="#crearContactoModal"
+      onclick="abrirModalCrearContacto()"
     >
-      Nuevo Contacto
+      Crear Contacto
     </button>
   </div>
   <!--tablas de contactos-->
@@ -62,7 +62,7 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h1 class="modal-title fs-5" id="tituloCrearContactoModal">
+          <h1 class="modal-title fs-5" id="tituloModal">
             AGREGAR NUEVO CONTACTO
           </h1>
         </div>
@@ -132,7 +132,7 @@
             >
               Cancelar
             </button>
-            <button type="submit" class="btn btn-success">
+            <button id="botonCrearModificar" type="submit" class="btn btn-success">
               Crear Contacto
             </button>
           </div>
