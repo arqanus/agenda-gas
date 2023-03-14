@@ -24,40 +24,18 @@
     class="container col-12 col-lg-6 mb-4 d-flex justify-content-center"
     id="divContactos"
   ></div>
-
   <!-- notificaciones -->
-
-  <div class="toast-container position-fixed bottom-0 end-0 p-3">
-    <!-- notificación -->
-    <div
-      id="notificacion"
-      class="toast align-items-center text-white border-0"
-      role="alert"
-      aria-live="assertive"
-      aria-atomic="true"
-    >
-      <div class="toast-header p-0">
-        <div class="icono-notificacion"><i id="iconoNotificacion"></i></div>
-        <strong class="me-auto" id="tituloNotificacion">Bootstrap</strong>
-        <button
-          type="button"
-          class="btn-close m-2"
-          data-bs-dismiss="toast"
-          aria-label="Close"
-        ></button>
-      </div>
-
-      <div class="toast-body" id="mensajeNotificacion"></div>
-    </div>
+  <div class="div-notificaciones">
+    <div class="toast-container position-fixed bottom-0 end-0 p-3" id="contenedorNotificaciones"><!-- aquí van las notificaciones --></div>
   </div>
 
   <!-- Modal --------------------------------------------MODAL MODAL MODAL MODALM MODAL MODAL MODAL-->
   <div
-    class="modal-lg modal fade"
+    class="modal fade"
     id="crearContactoModal"
     tabindex="-1"
     aria-labelledby="tituloCrearContactoModal"
-    aria-hidden="true"
+    
   >
     <div class="modal-dialog">
       <div class="modal-content">
@@ -107,7 +85,6 @@
                 class="form-control me-4"
                 name="correo"
                 id="correo"
-                
                 required
               />
               <span class="input-group-text">
@@ -119,7 +96,7 @@
                 name="telf"
                 id="telf"
                 pattern="[\d]{9,11}"
-                  title="El telefono debe de contener entre 9 a 11 números"
+                title="El telefono debe de contener entre 9 a 11 números"
                 required
               />
             </div>
@@ -132,7 +109,11 @@
             >
               Cancelar
             </button>
-            <button id="botonCrearModificar" type="submit" class="btn btn-success">
+            <button
+              id="botonCrearModificar"
+              type="submit"
+              class="btn btn-success"
+            >
               Crear Contacto
             </button>
           </div>
