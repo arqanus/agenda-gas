@@ -40,7 +40,7 @@ function modificarContacto(numFila, datos){
 
 
 function importarContactos(){
-    let url = 'https://randomuser.me/api/?results=5&inc=name, email, phone'
+    let url = 'https://randomuser.me/api/?results=5&inc=name, email, phone, picture'
     let respuesta = UrlFetchApp.fetch(url).getContentText()
 let datos = JSON.parse(respuesta)
 
@@ -48,6 +48,6 @@ let datos = JSON.parse(respuesta)
 }
 
 function insertarContactoJSON(contacto){
-    HOJA.appendRow([contacto.name.first, contacto.name.last, contacto.email, contacto.phone])
+    HOJA.appendRow([contacto.name.first, contacto.name.last, contacto.email, contacto.phone, contacto.picture.medium])
 
 }
